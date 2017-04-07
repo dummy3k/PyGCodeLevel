@@ -1,7 +1,4 @@
 #!/usr/bin/env python
-"""\
-Simple g-code streaming script for grbl
-"""
 
 import serial
 import time, re
@@ -31,7 +28,6 @@ def gcode(s, cmd):
 	return grbl_out
 
 def status(ser):
-
 	cmd = "?"
 	logger.debug(">>> %s" % cmd)
 	ser.write(cmd + '\n')
@@ -126,34 +122,11 @@ def create_height_map(width, height, step_size=5):
 	end_time = datetime.now()
 	print(end_time - start_time)
 
+	
 if __name__ == '__main__':
 	helper.logging_config()
-	# create_height_map(50, 30, 5)
-	create_height_map(52, 32, 4)
-
-# Open grbl serial port
-# s = serial.Serial('COM5',115200)
+	# # create_height_map(50, 30, 5)
+	# create_height_map(52, 32, 4)
 
 
-# def send_gcode_file():
-	# # Open g-code file
-	# f = open('somefile.gcode','r');
-
-
-	# # Stream g-code to grbl
-	# for line in f:
-		# l = line.strip() # Strip all EOL characters for streaming
-		# logger.debug 'Sending: ' + l,
-		# s.write(l + '\n') # Send g-code block to grbl
-		# grbl_out = s.readline() # Wait for grbl response with carriage return
-		# logger.debug ' : ' + grbl_out.strip()
-
-	# # Wait here until grbl is finished to close serial port and file.
-	# raw_input("  Press <Enter> to exit and disable grbl.")
-
-	# # Close file and serial port
-	# f.close()
-
-# # s.close()
-
-
+	
