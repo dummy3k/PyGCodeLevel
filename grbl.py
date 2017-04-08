@@ -5,6 +5,7 @@ import time, re
 import helper
 from pprint import pprint, pformat
 from datetime import datetime
+import numpy as np
 
 import logging
 logger = logging.getLogger(__name__)
@@ -121,6 +122,8 @@ def create_height_map(width, height, step_size=5):
 	
 	end_time = datetime.now()
 	print(end_time - start_time)
+	
+	np.savetxt('hmnp.txt', rows, '%.3f')
 
 	
 if __name__ == '__main__':
