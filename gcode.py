@@ -166,8 +166,8 @@ def gcode_file_info(gcode_filename):
 				
 	r = (min_x, min_y, max_x, max_y)
 	print("(%s, %s), (%s, %s)" % r)
-	print(points)
-	print(points3d)
+	# print(points)
+	# print(points3d)
 	return r
 	
 if __name__ == '__main__':

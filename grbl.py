@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
 import serial
-import time, re
+import time, re, sys
 import helper
 from pprint import pprint, pformat
 from datetime import datetime
 import numpy as np
+import argparse
 
 import logging
 logger = logging.getLogger(__name__)
@@ -116,20 +117,39 @@ def create_height_map(width, height, step_size=5):
 			gcode(s, "G91 G0 Y-%i" % step_size)
 		
 		# logger.info(pformat(rows))
-		logger.info(rows)
-		logger.info(sprint_hmap(rows))
+		logger.debug(rows)
+		# logger.info(sprint_hmap(rows))
 		gcode(s, "G90 G0 X0 Y0 Z0") # return to zero
 	
 	end_time = datetime.now()
-	print(end_time - start_time)
+	logger.info("duration: %s" % (end_time - start_time))
+	return rows
 	
-	np.savetxt('hmnp.txt', rows, '%.3f')
+	# np.savetxt('hmnp.txt', rows, '%.3f')
 
 	
 if __name__ == '__main__':
 	helper.logging_config()
-	# # create_height_map(50, 30, 5)
-	# create_height_map(52, 32, 4)
+	
+	parser = argparse.ArgumentParser(description='Create heightmap',
+									 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+	# parser.add_argument('-g', dest='gcode')
+	parser.add_argument('-x', dest='width', type=int)
+	parser.add_argument('-y', dest='height', type=int)
+	parser.add_argument('-s', dest='step_size', type=int, 
+						default=5, help='step size')
+	parser.add_argument('-f', dest='file', type=str)
+	# parser.add_argument('cmd', choices=['info', 'multiplex'])
 
-
+	args = parser.parse_args()
+	if not args.file:
+		print("missing file argument")
+		sys.exit(1)
+		
+	# result = create_height_map(**vars(args))
+	result = create_height_map(args.width, args.height, args.step_size)
+	# result = [  [-12.558, -12.551, -12.544]
+				# ,  [-12.567, -12.56, -12.556]
+				# ,  [-12.58, -12.576, -12.559]]
+	np.savetxt(args.file, result, '%0.3f')
 	
