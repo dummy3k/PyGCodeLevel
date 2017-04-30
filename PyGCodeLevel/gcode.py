@@ -165,7 +165,7 @@ def gcode_file_info(gcode_filename):
 					points3d.append(vector)
 				
 	r = (min_x, min_y, max_x, max_y)
-	print("(%s, %s), (%s, %s)" % r)
+	# print("(%s, %s), (%s, %s)" % r)
 	# print(points)
 	# print(points3d)
 	return r

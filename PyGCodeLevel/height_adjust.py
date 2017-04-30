@@ -14,61 +14,11 @@ import matplotlib
 import matplotlib.pyplot as plt
 
 from gcode import gcode_file_info, match_movement, daniel
+from grbl import gcode, status
 
 short_sleep = 0.1
 long_sleep = 1
 
-def gcode(s, cmd):
-	logger.debug(">>> %s" % cmd)
-	s.write(cmd + '\n')
-	s.flushInput()
-
-	grbl_out = None
-	while grbl_out != 'ok':
-		# s.write('?' + '\n')
-		time.sleep(short_sleep)
-		grbl_out = s.readline().strip()
-		# logger.debug("<<< %s" % grbl_out),
-
-	logger.debug(grbl_out)
-	return grbl_out
-
-def status(ser):
-	cmd = "?"
-	logger.debug(">>> %s" % cmd)
-	ser.write(cmd + '\n')
-	ser.flushInput()
-
-	result = ser.readline().strip()
-	logger.debug(result)
-	# result = gcode(ser, "?")
-	if result == "ok":
-		return (result, )
-
-	p = r"<(\w+),MPos:([-\d\.]+),([-\d\.]+),([-\d\.]+),WPos:([-\d\.]+),([-\d\.]+),([-\d\.]+)>"
-	m = re.match(p, result)
-	if not m:
-		p = r"\[PRB:([-\d\.]+),([-\d\.]+),([-\d\.]+):([-\d\.]+)]"
-	m = re.match(p, result)
-
-	return m.groups()
-
-def wait_idle(s):
-	while True:
-		r = status(s)
-
-		if r[0] == "ok":
-			time.sleep(short_sleep)
-		elif r[0] == "Run":
-			time.sleep(long_sleep)
-		else:
-			return r
-			
-		
-if __name__ == '__main__':
-	helper.logging_config()
-
-	
 def multiplex_files(gcode_filename, bounds, heightmap_filename, step_size=5):
 	# G21
 	# G90
@@ -111,13 +61,15 @@ def multiplex_files(gcode_filename, bounds, heightmap_filename, step_size=5):
 				
 				
 			# logger.debug("(%s, %s), %s" % (wpos[0], wpos[1], wpos_z))
-			logger.debug("%s (z:%s)" % (line, wpos_z))
+			# logger.debug("%s (z:%s)" % (line, wpos_z))
+			logger.debug("%s (%s,%s,%s)" % (line, wpos[0], wpos[1], wpos_z))
+			# logger.debug(bounds)
 
 			# real_z = hmnp[int(wpos[1] / step_size)][int(wpos[0] / step_size)]
 			# real_z -= hmnp[0][0]
 			# real_z = wpos_z + real_z
 			
-			x = int(math.floor((wpos[0]-bounds[0]) / step_size))
+			x = int(math.floor((wpos[0]-bounds[2]) / step_size))
 			y = int(math.floor((wpos[1]-bounds[3]) / step_size))
 			
 			A = hmnp[y][x]
@@ -225,6 +177,7 @@ if __name__ == '__main__':
 	main()
 	
 def main():
+	helper.logging_config()
 	parser = argparse.ArgumentParser(description='GCode Tool')
 	parser.add_argument('-g', dest='gcode')
 	parser.add_argument('-s', dest='step_size', type=int, 
