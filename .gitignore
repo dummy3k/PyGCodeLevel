@@ -2,3 +2,5 @@
 *.gcode
 *.map
 *.egg-info
+.idea
+*.bak
