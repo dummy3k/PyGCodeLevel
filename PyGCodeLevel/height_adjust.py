@@ -298,6 +298,9 @@ def create_height_map(bounds, step_size=5):
 	# np.savetxt('hmnp.txt', rows, '%.3f')
 
 if __name__ == '__main__':
+	main()
+	
+def main():
 	parser = argparse.ArgumentParser(description='GCode Tool')
 	parser.add_argument('-g', dest='gcode')
 	parser.add_argument('-s', dest='step_size', type=int, 
