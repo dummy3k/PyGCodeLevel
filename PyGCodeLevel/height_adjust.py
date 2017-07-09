@@ -149,7 +149,7 @@ def create_height_map(bounds, step_size=5):
 				else:
 					cols.insert(0, z)
 				
-				gcode(s, "G91 G0 Z1")
+				gcode(s, "G91 G0 Z5")
 				if x + 1 == steps_x:
 					# dont move at the end
 					pass
